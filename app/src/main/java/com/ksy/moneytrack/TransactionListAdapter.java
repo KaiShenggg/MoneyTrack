@@ -46,14 +46,14 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         holder.tvAmount.setText(MainActivity.decimalFormat.format(transaction.getAmount()));
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), TransactionDetail.class);
+            Intent intent = new Intent(v.getContext(), TransactionDetailActivity.class);
 
             intent.putExtra("id", transaction.getId());
             intent.putExtra("type", transaction.getType());
             intent.putExtra("categoryBgResId", category.getBgResId());
             intent.putExtra("categoryIconResId", category.getIconResId());
             intent.putExtra("categoryTitle", transaction.getCategory());
-            intent.putExtra("amount", MainActivity.decimalFormat.format(transaction.getAmount()));
+            intent.putExtra("amount", MainActivity.decimalFormat.format(Math.abs(transaction.getAmount())));
             intent.putExtra("memo", transaction.getMemo());
             intent.putExtra("date", transaction.getDate());
 

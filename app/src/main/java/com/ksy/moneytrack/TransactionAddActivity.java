@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class NewTransaction extends AppCompatActivity {
+public class TransactionAddActivity extends AppCompatActivity {
 
     private String selectedType = "Expenses";
     private EditText editAmount;
@@ -45,7 +45,7 @@ public class NewTransaction extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_transaction);
+        setContentView(R.layout.activity_transaction_add);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Enable the back button in the app bar
         getSupportActionBar().setDisplayShowTitleEnabled(false); // Disable the default title
@@ -122,7 +122,7 @@ public class NewTransaction extends AppCompatActivity {
                 int day = selectedDay;
 
                 // Create a variable for date picker dialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(NewTransaction.this, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(TransactionAddActivity.this, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         calendar.set(year, monthOfYear, dayOfMonth);
@@ -181,7 +181,7 @@ public class NewTransaction extends AppCompatActivity {
 
             if (insertedRowId != -1) {
                 Toast.makeText(this, selectedType + " added", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(NewTransaction.this, MainActivity.class);
+                Intent intent = new Intent(TransactionAddActivity.this, MainActivity.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Failed to add transaction", Toast.LENGTH_SHORT).show();

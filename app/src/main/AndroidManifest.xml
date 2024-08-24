@@ -13,7 +13,7 @@
         android:theme="@style/Theme.EzSplit"
         tools:targetApi="31">
         <activity
-            android:name=".SplashScreen"
+            android:name=".SplashScreenActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.EzSplit">
@@ -24,10 +24,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewTransaction"
+            android:name=".TransactionAddActivity"
             android:exported="false" />
         <activity
-            android:name=".TransactionDetail"
+            android:name=".TransactionDetailActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

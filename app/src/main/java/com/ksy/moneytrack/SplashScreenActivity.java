@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-public class SplashScreen extends AppCompatActivity {
+public class SplashScreenActivity extends AppCompatActivity {
 
     private static final long SPLASH_DELAY = 2000;
     private Intent intent;
@@ -25,7 +25,7 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                intent = new Intent(SplashScreen.this, MainActivity.class);
+                intent = new Intent(SplashScreenActivity.this, MainActivity.class);
 
                 startActivity(intent);
                 finish();

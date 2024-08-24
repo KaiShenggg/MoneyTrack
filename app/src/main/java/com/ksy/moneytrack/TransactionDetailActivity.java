@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TransactionDetail extends AppCompatActivity {
+public class TransactionDetailActivity extends AppCompatActivity {
 
     private int id;
 
@@ -51,7 +51,7 @@ public class TransactionDetail extends AppCompatActivity {
         tvCategoryTitle.setText(categoryTitle);
         tvType.setText(type);
         tvAmount.setText(amount);
-        tvMemo.setText(memo);
+        tvMemo.setText(memo.isEmpty() ? "-" : memo);
         tvDate.setText(date);
     }
 
@@ -78,7 +78,7 @@ public class TransactionDetail extends AppCompatActivity {
 
                 if (isDeleted) {
                     Toast.makeText(this, "Deleted successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(TransactionDetail.this, MainActivity.class);
+                    Intent intent = new Intent(TransactionDetailActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(this, "Failed to delete transaction", Toast.LENGTH_SHORT).show();

@@ -48,14 +48,14 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout incomeSection = findViewById(R.id.incomeSection);
         incomeSection.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, NewTransaction.class);
+            Intent intent = new Intent(MainActivity.this, TransactionAddActivity.class);
             startActivity(intent);
         });
 
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, NewTransaction.class);
+            Intent intent = new Intent(MainActivity.this, TransactionAddActivity.class);
             startActivity(intent);
         });
     }
