@@ -21,6 +21,7 @@ public class SQLiteAdapter {
     public static final int MY_DATABASE_VERSION = 1;
 
     private static final String DATABASE_TRANSACTION_TABLE = "TRANSCATION";
+    private static final String TRANSACTION_ID = "id";
     private static final String TRANSACTION_KEY_CONTENT = "type";
     private static final String TRANSACTION_KEY_CONTENT_2 = "category";
     private static final String TRANSACTION_KEY_CONTENT_3 = "amount";
@@ -30,7 +31,7 @@ public class SQLiteAdapter {
 
     // SQL command to create the table with the columns
     private static final String SCRIPT_CREATE_DATABASE_TRANSACTION_TABLE = "create table " + DATABASE_TRANSACTION_TABLE +
-            " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            " (" + TRANSACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             TRANSACTION_KEY_CONTENT + " text not null, " +
             TRANSACTION_KEY_CONTENT_2 + " text not null, " +
             TRANSACTION_KEY_CONTENT_3 + " decimal(10,2) not null, " +
@@ -99,7 +100,7 @@ public class SQLiteAdapter {
     public List<Transaction> queueAllTransaction(int month, int year, double[] totalAmounts) {
         String datePrefix = String.format("%d-%02d", year, month); // yyyy-mm format
 
-        String[] columns = new String[] {TRANSACTION_KEY_CONTENT, TRANSACTION_KEY_CONTENT_2, TRANSACTION_KEY_CONTENT_3, TRANSACTION_KEY_CONTENT_4, TRANSACTION_KEY_CONTENT_5, TRANSACTION_KEY_CONTENT_6};
+        String[] columns = new String[] {TRANSACTION_ID, TRANSACTION_KEY_CONTENT, TRANSACTION_KEY_CONTENT_2, TRANSACTION_KEY_CONTENT_3, TRANSACTION_KEY_CONTENT_4, TRANSACTION_KEY_CONTENT_5, TRANSACTION_KEY_CONTENT_6};
         String selection = TRANSACTION_KEY_CONTENT_5 + " LIKE ?";
         String[] selectionArgs = new String[] { datePrefix + "%" };
         String orderBy = TRANSACTION_KEY_CONTENT_5 + " DESC, " + TRANSACTION_KEY_CONTENT_6 + " DESC";
@@ -109,6 +110,7 @@ public class SQLiteAdapter {
         double totalIncome = 0;
         double totalExpenses = 0;
 
+        int index_id = cursor.getColumnIndex(TRANSACTION_ID);
         int index_CONTENT = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT);
         int index_CONTENT_2 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_2);
         int index_CONTENT_3 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_3);
@@ -118,6 +120,7 @@ public class SQLiteAdapter {
 
         for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
             Transaction transaction = new Transaction(
+                    cursor.getInt(index_id),
                     cursor.getString(index_CONTENT),
                     cursor.getString(index_CONTENT_2),
                     cursor.getDouble(index_CONTENT_3),
@@ -139,6 +142,14 @@ public class SQLiteAdapter {
 
         cursor.close();
         return result;
+    }
+
+    public boolean deleteTransaction(int id) {
+        String whereClause =  TRANSACTION_ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(id)};
+
+        int rowsDeleted = sqLiteDatabase.delete(DATABASE_TRANSACTION_TABLE, whereClause, whereArgs);
+        return rowsDeleted > 0;
     }
 
     // Close the database

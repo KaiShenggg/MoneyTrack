@@ -6,12 +6,14 @@
     <string name="tx_no_transaction">No Transactions\nAdd it now</string>
     <string name="tx_new_transaction">New Transaction</string>
     <string name="tx_category">Category</string>
+    <string name="tx_type">Type</string>
     <string name="tx_amount">Amount</string>
     <string name="tx_memo">Memo</string>
     <string name="tx_date">Date</string>
     <string name="tx_optional">Optional</string>
     <string name="tx_calendar">Calendar</string>
     <string name="tx_zero">0.00</string>
+    <string name="tx_details">Details</string>
 
     <string-array name="months">
         <item>Jan</item>

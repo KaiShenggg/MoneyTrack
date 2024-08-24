@@ -1,6 +1,7 @@
 package com.ksy.moneytrack;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +42,23 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
             holder.ivCategoryIcon.setImageResource(category.getIconResId());
         }
 
-        holder.tvCategoryName.setText(transaction.getCategory());
+        holder.tvCategoryTitle.setText(transaction.getCategory());
         holder.tvAmount.setText(MainActivity.decimalFormat.format(transaction.getAmount()));
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), TransactionDetail.class);
+
+            intent.putExtra("id", transaction.getId());
+            intent.putExtra("type", transaction.getType());
+            intent.putExtra("categoryBgResId", category.getBgResId());
+            intent.putExtra("categoryIconResId", category.getIconResId());
+            intent.putExtra("categoryTitle", transaction.getCategory());
+            intent.putExtra("amount", MainActivity.decimalFormat.format(transaction.getAmount()));
+            intent.putExtra("memo", transaction.getMemo());
+            intent.putExtra("date", transaction.getDate());
+
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -52,13 +68,13 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
 
     static class TransactionViewHolder extends RecyclerView.ViewHolder {
         ImageView ivCategoryBg, ivCategoryIcon;
-        TextView tvCategoryName, tvAmount;
+        TextView tvCategoryTitle, tvAmount;
 
         TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             ivCategoryBg = itemView.findViewById(R.id.ivCategoryBg);
             ivCategoryIcon = itemView.findViewById(R.id.ivCategoryIcon);
-            tvCategoryName = itemView.findViewById(R.id.tvCategoryName);
+            tvCategoryTitle = itemView.findViewById(R.id.tvCategoryTitle);
             tvAmount = itemView.findViewById(R.id.tvAmount);
         }
     }
