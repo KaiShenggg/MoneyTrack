@@ -30,6 +30,9 @@
             android:name=".TransactionDetailActivity"
             android:exported="false" />
         <activity
+            android:name=".TransactionBreakdownActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
     </application>

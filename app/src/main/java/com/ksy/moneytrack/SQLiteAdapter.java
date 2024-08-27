@@ -11,8 +11,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class SQLiteAdapter {
 
@@ -77,7 +79,7 @@ public class SQLiteAdapter {
         contentValues.put(TRANSACTION_KEY_CONTENT_3, content.equals("Income") ? content_3 : content_3 * -1);
         contentValues.put(TRANSACTION_KEY_CONTENT_4, content_4);
 
-        // Convert content_6 (date) to SQL DATE format
+        // Convert date to SQL DATE format
         String sqlDate = formatDate(content_5);
         contentValues.put(TRANSACTION_KEY_CONTENT_5, sqlDate);
 
@@ -143,6 +145,33 @@ public class SQLiteAdapter {
         cursor.close();
         return result;
     }
+
+    public Map<String, Float> queueTransactionByType(String type, int month, int year) {
+        String datePrefix = String.format("%d-%02d", year, month); // yyyy-mm format
+
+        String[] columns = new String[] {TRANSACTION_KEY_CONTENT_2, "SUM(" + TRANSACTION_KEY_CONTENT_3 + ") as TotalAmount"};
+        String selection = TRANSACTION_KEY_CONTENT + " = ? AND " + TRANSACTION_KEY_CONTENT_5 + " LIKE ?";
+        String[] selectionArgs = new String[] {type, datePrefix + "%"};
+
+        // Perform aggregation query, grouping by category
+        Cursor cursor = sqLiteDatabase.query(DATABASE_TRANSACTION_TABLE, columns, selection, selectionArgs, TRANSACTION_KEY_CONTENT_2, null, null);
+
+        Map<String, Float> categoryTotals = new HashMap<>();
+        if (cursor != null) {
+            int indexCategory = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_2);
+            int indexTotalAmount = cursor.getColumnIndex("TotalAmount");
+
+            while (cursor.moveToNext()) {
+                String category = cursor.getString(indexCategory);
+                float amount = cursor.getFloat(indexTotalAmount);
+                categoryTotals.put(category, amount);
+            }
+            cursor.close();
+        }
+
+        return categoryTotals;
+    }
+
 
     public boolean deleteTransaction(int id) {
         String whereClause =  TRANSACTION_ID + " = ?";

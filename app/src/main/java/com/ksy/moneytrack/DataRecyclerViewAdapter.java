@@ -24,7 +24,7 @@ public class DataRecyclerViewAdapter extends RecyclerView.Adapter<DataRecyclerVi
     // Constructor
     public DataRecyclerViewAdapter(Context context, List<Transaction> transactionDataList) {
         this.context = context;
-        this.groupedTransactions = TransactionUtils.groupTransactionsByDate(transactionDataList);
+        this.groupedTransactions = Utils.groupTransactionsByDate(transactionDataList);
         this.dates = new ArrayList<>(groupedTransactions.keySet()); // Extract dates into a list for easy indexing
     }
 
@@ -45,7 +45,7 @@ public class DataRecyclerViewAdapter extends RecyclerView.Adapter<DataRecyclerVi
         holder.tvDate.setText(String.join("/", parts[2], parts[1])); // dd/mm format
 
         // Populate the RecyclerView within the CardView with the transactions
-        TransactionListAdapter adapter = new TransactionListAdapter(context, transactionsForDate);
+        ItemListAdapter adapter = new ItemListAdapter(context, transactionsForDate, true);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(context)); // Ensure the RecyclerView is properly initialized
         holder.recyclerView.setAdapter(adapter);
     }

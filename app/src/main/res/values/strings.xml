@@ -14,6 +14,10 @@
     <string name="tx_calendar">Calendar</string>
     <string name="tx_zero">0.00</string>
     <string name="tx_details">Details</string>
+    <string name="tx_breakdown">Breakdown</string>
+    <string name="tx_income_list">Income List</string>
+    <string name="tx_expenses_list">Expenses List</string>
+    <string name="tx_no_data_available">No Data Available</string>
 
     <string-array name="months">
         <item>Jan</item>

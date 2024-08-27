@@ -4,36 +4,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FloatingActionButton fab;
-
-    private RecyclerView rvTransaction;
-
-    private TextView tvNoTransaction;
-
-    private DataRecyclerViewAdapter adapter;
-    private SQLiteAdapter mySQLiteAdapter;
+    private final Calendar calendar = Calendar.getInstance();
+    private int currentMonth, currentYear;
 
     public static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
@@ -46,14 +36,18 @@ public class MainActivity extends AppCompatActivity {
         listTransactions();
 
 
+        currentMonth = calendar.get(Calendar.MONTH) + 1;
+        currentYear = calendar.get(Calendar.YEAR);
+
+
         LinearLayout incomeSection = findViewById(R.id.incomeSection);
-        incomeSection.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, TransactionAddActivity.class);
-            startActivity(intent);
-        });
+        LinearLayout expensesSection = findViewById(R.id.expensesSection);
+
+        setOnClickListener(incomeSection, "Income");
+        setOnClickListener(expensesSection, "Expenses");
 
 
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, TransactionAddActivity.class);
             startActivity(intent);
@@ -82,77 +76,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_date) {
-            showMonthYearPickerDialog(item);
+            Utils.showMonthYearPickerDialog(this, item, (selectedMonth, selectedYear) -> {
+                if (selectedMonth != null && selectedYear != null) {
+                    currentMonth = selectedMonth;
+                    currentYear = selectedYear;
+                    listTransactions(selectedMonth, selectedYear);
+                }
+            });
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void showMonthYearPickerDialog(MenuItem item) {
-        final Calendar calendar = Calendar.getInstance();
-        final String[] months = getResources().getStringArray(R.array.months);
-
-        String title = item.getTitle().toString();
-        int currentMonth, currentYear;
-
-        try {
-            String[] parts = title.split(" "); // MMM yyyy format
-
-            List<String> monthList = Arrays.asList(months);
-            currentMonth = monthList.indexOf(parts[0]);
-
-            currentYear = Integer.parseInt(parts[1]);
-        } catch (Exception e) {
-            currentMonth = calendar.get(Calendar.MONTH) + 1;
-            currentYear = calendar.get(Calendar.YEAR);
-        }
-
-        // Inflate the layout for the dialog
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.layout_month_year_picker, null);
-
-        final NumberPicker npMonth = view.findViewById(R.id.npMonth);
-        final NumberPicker npYear = view.findViewById(R.id.npYear);
-
-        npMonth.setMinValue(0);
-        npMonth.setMaxValue(months.length - 1);
-        npMonth.setDisplayedValues(months);
-
-        npYear.setMinValue(2000);
-        npYear.setMaxValue(2100);
-
-        npMonth.setValue(currentMonth);
-        npYear.setValue(currentYear);
-
-        // Create and show the dialog
-        new AlertDialog.Builder(this)
-                .setTitle("Select Month and Year")
-                .setView(view)
-                .setPositiveButton("OK", (dialog, which) -> {
-                    int selectedYear = npYear.getValue();
-                    int selectedMonth = npMonth.getValue();
-
-                    // Format and set the title
-                    String selectedDate = String.format("%s %d", months[selectedMonth], selectedYear);
-                    item.setTitle(selectedDate);
-                    listTransactions(selectedMonth+1, selectedYear);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    public void listTransactions() {
+    private void listTransactions() {
         Calendar calendar = Calendar.getInstance();
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
         int currentYear = calendar.get(Calendar.YEAR);
         listTransactions(currentMonth, currentYear);
     }
 
-    public void listTransactions(int month, int year) {
-        mySQLiteAdapter = new SQLiteAdapter(this);
+    private void listTransactions(int month, int year) {
+        SQLiteAdapter mySQLiteAdapter = new SQLiteAdapter(this);
         mySQLiteAdapter.openToRead();
 
-        rvTransaction = findViewById(R.id.rvTransaction);
+        RecyclerView rvTransaction = findViewById(R.id.rvTransaction);
         rvTransaction.setLayoutManager(new LinearLayoutManager(this));
         rvTransaction.setNestedScrollingEnabled(false);
 
@@ -162,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         // Retrieve data from database
         List<Transaction> transactionList = mySQLiteAdapter.queueAllTransaction(month, year, totalAmounts);
 
-        tvNoTransaction = findViewById(R.id.tvNoTransaction);
+        TextView tvNoTransaction = findViewById(R.id.tvNoTransaction);
 
         if (transactionList.isEmpty()) {
             rvTransaction.setAdapter(null);
@@ -170,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             tvNoTransaction.setVisibility(View.GONE);
 
-            adapter = new DataRecyclerViewAdapter(MainActivity.this, transactionList); // Pass the data to the adapter
+            DataRecyclerViewAdapter adapter = new DataRecyclerViewAdapter(MainActivity.this, transactionList); // Pass the data to the adapter
             rvTransaction.setAdapter(adapter);
 
             adapter.notifyDataSetChanged(); // Notify the adapter of the data changes
@@ -185,5 +132,15 @@ public class MainActivity extends AppCompatActivity {
         tvBalance.setText(String.format("%.2f", totalAmounts[0] + totalAmounts[1]));
 
         mySQLiteAdapter.close();
+    }
+
+    private void setOnClickListener(LinearLayout linerLayout, String type) {
+        linerLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, TransactionBreakdownActivity.class);
+            intent.putExtra("type", type);
+            intent.putExtra("month", currentMonth);
+            intent.putExtra("year", currentYear);
+            startActivity(intent);
+        });
     }
 }
