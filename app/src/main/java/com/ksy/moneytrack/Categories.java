@@ -30,6 +30,7 @@ public class Categories {
 
         // Entertainment
         categoryList.add(new Category("Entertainment", R.drawable.ic_entertainment, R.drawable.circle_cornflower_bg, "Expenses"));
+        categoryList.add(new Category("Sport", R.drawable.ic_sport, R.drawable.circle_carrot_orange_bg, "Expenses"));
         categoryList.add(new Category("Movie", R.drawable.ic_movie, R.drawable.circle_apple_bg, "Expenses"));
 
         // Health
@@ -54,6 +55,7 @@ public class Categories {
         categoryList.add(new Category("Dividends", R.drawable.ic_dividends, R.drawable.circle_elm_bg, "Income"));
         categoryList.add(new Category("Pocket Money", R.drawable.ic_pocket_money, R.drawable.circle_coral_red_bg, "Income"));
         categoryList.add(new Category("Ang Pao", R.drawable.ic_ang_pao, R.drawable.circle_apple_bg, "Income"));
+        categoryList.add(new Category("Balance", R.drawable.ic_balance, R.drawable.circle_carrot_orange_bg, "Income"));
         categoryList.add(new Category("Others", R.drawable.ic_others, R.drawable.circle_copper_bg, "Income"));
     }
 
