@@ -172,6 +172,43 @@ public class SQLiteAdapter {
         return categoryTotals;
     }
 
+    public Map<String, Map<Integer, Double>> queueIncomeAndExpenses(int month, int year) {
+        String datePrefix = String.format("%d-%02d", year, month); // yyyy-mm format
+
+        String[] columns = new String[] {TRANSACTION_KEY_CONTENT, TRANSACTION_KEY_CONTENT_3, TRANSACTION_KEY_CONTENT_5};
+        String selection = TRANSACTION_KEY_CONTENT_5 + " LIKE ?";
+        String[] selectionArgs = new String[] { datePrefix + "%" };
+        String orderBy = TRANSACTION_KEY_CONTENT_5;
+        Cursor cursor = sqLiteDatabase.query(DATABASE_TRANSACTION_TABLE, columns, selection, selectionArgs, null, null,  orderBy);
+
+        Map<Integer, Double> incomePerDay = new HashMap<>();
+        Map<Integer, Double> expensesPerDay = new HashMap<>();
+
+        int index_CONTENT = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT);
+        int index_CONTENT_3 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_3);
+        int index_CONTENT_5 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_5);
+
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+            String type = cursor.getString(index_CONTENT);
+            double amount = cursor.getDouble(index_CONTENT_3);
+            String date = cursor.getString(index_CONTENT_5);
+            String[] split = date.split("-");
+            int day = Integer.parseInt(split[2]);
+
+            if (type.equals("Income"))
+                incomePerDay.put(day, incomePerDay.getOrDefault(day, 0.0) + amount);
+            else if (type.equals("Expenses"))
+                expensesPerDay.put(day, expensesPerDay.getOrDefault(day, 0.0) + amount);
+        }
+
+        cursor.close();
+
+        Map<String, Map<Integer, Double>> result = new HashMap<>();
+        result.put("Income", incomePerDay);
+        result.put("Expenses", expensesPerDay);
+
+        return result;
+    }
 
     public boolean deleteTransaction(int id) {
         String whereClause =  TRANSACTION_ID + " = ?";

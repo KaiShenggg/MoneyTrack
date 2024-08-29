@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         setOnClickListener(incomeSection, "Income");
         setOnClickListener(expensesSection, "Expenses");
+        setOnClickListener(balanceSection, "Balance");
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -137,10 +138,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void setOnClickListener(LinearLayout linerLayout, String type) {
         linerLayout.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, TransactionBreakdownActivity.class);
-            intent.putExtra("type", type);
-            intent.putExtra("month", currentMonth);
-            intent.putExtra("year", currentYear);
+            Intent intent;
+            if (!type.equals("Balance")) {
+                intent = new Intent(MainActivity.this, TransactionBreakdownActivity.class);
+                intent.putExtra("type", type);
+                intent.putExtra("month", currentMonth);
+                intent.putExtra("year", currentYear);
+            } else {
+                intent = new Intent(MainActivity.this, CalendarActivity.class);
+                intent.putExtra("month", currentMonth);
+                intent.putExtra("year", currentYear);
+            }
             startActivity(intent);
         });
     }

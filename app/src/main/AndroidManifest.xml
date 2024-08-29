@@ -33,6 +33,9 @@
             android:name=".TransactionBreakdownActivity"
             android:exported="false" />
         <activity
+            android:name=".CalendarActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
     </application>
