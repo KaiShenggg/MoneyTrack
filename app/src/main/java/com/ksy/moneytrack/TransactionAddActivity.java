@@ -61,7 +61,7 @@ public class TransactionAddActivity extends AppCompatActivity {
         Spinner spinner = customView.findViewById(R.id.spinner_nav);
 
         // Create an adapter for the spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.new_transaction, R.layout.spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.new_transaction, R.layout.item_spinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);

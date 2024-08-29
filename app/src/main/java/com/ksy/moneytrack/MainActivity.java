@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout incomeSection = findViewById(R.id.incomeSection);
         LinearLayout expensesSection = findViewById(R.id.expensesSection);
+        LinearLayout balanceSection = findViewById(R.id.balanceSection);
 
         setOnClickListener(incomeSection, "Income");
         setOnClickListener(expensesSection, "Expenses");
