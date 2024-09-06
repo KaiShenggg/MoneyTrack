@@ -18,13 +18,11 @@ public class Categories {
         // Transportation
         categoryList.add(new Category("Transportation", R.drawable.ic_transportation, R.drawable.circle_purple_bg, "Expenses"));
         categoryList.add(new Category("Car", R.drawable.ic_car, R.drawable.circle_copper_bg, "Expenses"));
-        categoryList.add(new Category("Bus", R.drawable.ic_bus, R.drawable.circle_apple_bg, "Expenses"));
-        categoryList.add(new Category("MRT", R.drawable.ic_mrt, R.drawable.circle_elm_bg, "Expenses"));
         categoryList.add(new Category("Parking", R.drawable.ic_parking, R.drawable.circle_carrot_orange_bg, "Expenses"));
         categoryList.add(new Category("Toll", R.drawable.ic_toll, R.drawable.circle_coral_red_bg, "Expenses"));
 
         // Shopping
-        categoryList.add(new Category("Shopping", R.drawable.ic_shopping, R.drawable.circle_copper_bg, "Expenses"));
+        categoryList.add(new Category("Shopping", R.drawable.ic_shopping, R.drawable.circle_apple_bg, "Expenses"));
         categoryList.add(new Category("Clothing", R.drawable.ic_clothing, R.drawable.circle_elm_bg, "Expenses"));
         categoryList.add(new Category("Electronics", R.drawable.ic_electronics, R.drawable.circle_purple_bg, "Expenses"));
 
