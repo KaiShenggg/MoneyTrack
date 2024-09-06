@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -181,8 +180,7 @@ public class TransactionAddActivity extends AppCompatActivity {
 
             if (insertedRowId != -1) {
                 Toast.makeText(this, selectedType + " added", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(TransactionAddActivity.this, MainActivity.class);
-                startActivity(intent);
+                onBackPressed();
             } else {
                 Toast.makeText(this, "Failed to add transaction", Toast.LENGTH_SHORT).show();
             }
