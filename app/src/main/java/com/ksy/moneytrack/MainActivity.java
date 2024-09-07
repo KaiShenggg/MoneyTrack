@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private final Calendar calendar = Calendar.getInstance();
     private int currentMonth, currentYear;
 
+    public static final int REQUEST_CODE = 1;
+
     public static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     @Override
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, TransactionAddActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE);
         });
     }
 
@@ -151,5 +153,15 @@ public class MainActivity extends AppCompatActivity {
             }
             startActivity(intent);
         });
+    }
+
+    // To update transaction view when returning from other activities
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            listTransactions();
+        }
     }
 }

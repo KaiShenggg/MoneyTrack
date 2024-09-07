@@ -61,7 +61,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Transa
                 intent.putExtra("memo", transaction.getMemo());
                 intent.putExtra("date", transaction.getDate());
 
-                v.getContext().startActivity(intent);
+                ((MainActivity) v.getContext()).startActivityForResult(intent, MainActivity.REQUEST_CODE);
             });
         } else {
             Map.Entry<String, Float> entry = (Map.Entry<String, Float>) items.get(position);

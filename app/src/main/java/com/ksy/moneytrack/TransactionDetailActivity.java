@@ -78,7 +78,9 @@ public class TransactionDetailActivity extends AppCompatActivity {
 
                 if (isDeleted) {
                     Toast.makeText(this, "Deleted successfully", Toast.LENGTH_SHORT).show();
-                    onBackPressed();
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    finish();
                 } else {
                     Toast.makeText(this, "Failed to delete transaction", Toast.LENGTH_SHORT).show();
                 }
