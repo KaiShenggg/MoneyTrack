@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -64,14 +63,12 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
-        // Get the current month and year
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
-        String dateString = sdf.format(calendar.getTime());
+        final String[] months = getResources().getStringArray(R.array.months);
+        String currentDate = String.format("%s %d", months[currentMonth-1], currentYear);
 
         // Set the menu title
         MenuItem menuItem = menu.findItem(R.id.menu_date);
-        menuItem.setTitle(dateString);
+        menuItem.setTitle(currentDate);
 
         return true;
     }
@@ -160,8 +157,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            listTransactions();
-        }
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK)
+            recreate();
     }
 }

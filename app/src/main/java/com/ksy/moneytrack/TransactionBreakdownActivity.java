@@ -19,9 +19,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -54,15 +52,12 @@ public class TransactionBreakdownActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MONTH, currentMonth-1);
-        calendar.set(Calendar.YEAR, currentYear);
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
-        String dateString = sdf.format(calendar.getTime());
+        final String[] months = getResources().getStringArray(R.array.months);
+        String currentDate = String.format("%s %d", months[currentMonth-1], currentYear);
 
         // Set the menu title
         MenuItem menuItem = menu.findItem(R.id.menu_date);
-        menuItem.setTitle(dateString);
+        menuItem.setTitle(currentDate);
 
         return true;
     }

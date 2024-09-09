@@ -31,13 +31,13 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         DaySummary daySummary = daySummaries.get(position);
 
         // Set date text
-        holder.dateTextView.setText(String.valueOf(daySummary.getDayOfMonth()));
+        holder.tvDate.setText(String.valueOf(daySummary.getDayOfMonth()));
 
         // Set income and expenses
         if (daySummary.getIncome() > 0)
-            holder.incomeTextView.setText(String.format("%.2f", daySummary.getIncome()));
+            holder.tvIncome.setText(String.format("%.2f", daySummary.getIncome()));
         if (daySummary.getExpenses() != 0)
-            holder.expensesTextView.setText(String.format("%.2f", daySummary.getExpenses()));
+            holder.tvExpenses.setText(String.format("%.2f", daySummary.getExpenses()));
     }
 
     @Override
@@ -47,13 +47,13 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
 
     static class CalendarViewHolder extends RecyclerView.ViewHolder {
 
-        TextView dateTextView, incomeTextView, expensesTextView;
+        TextView tvDate, tvIncome, tvExpenses;
 
         public CalendarViewHolder(@NonNull View itemView) {
             super(itemView);
-            dateTextView = itemView.findViewById(R.id.dateTextView);
-            incomeTextView = itemView.findViewById(R.id.incomeTextView);
-            expensesTextView = itemView.findViewById(R.id.expensesTextView);
+            tvDate = itemView.findViewById(R.id.tvDate);
+            tvIncome = itemView.findViewById(R.id.tvIncome);
+            tvExpenses = itemView.findViewById(R.id.tvExpenses);
         }
     }
 }

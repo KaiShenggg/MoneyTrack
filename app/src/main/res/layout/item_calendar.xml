@@ -6,29 +6,28 @@
     android:padding="5dp">
 
     <TextView
-        android:id="@+id/dateTextView"
+        android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1"
         android:textSize="16sp"
         android:textColor="@color/black"
         android:layout_marginBottom="15dp" />
 
     <TextView
-        android:id="@+id/incomeTextView"
+        android:id="@+id/tvIncome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:textSize="12sp"
+        android:layout_gravity="end"
+        android:textSize="10sp"
         android:textColor="@color/green" />
 
     <TextView
-        android:id="@+id/expensesTextView"
+        android:id="@+id/tvExpenses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:layout_marginBottom="10dp"
-        android:textSize="12sp"
+        android:textSize="10sp"
         android:textColor="@color/coral_red" />
 
 </LinearLayout>

@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -41,16 +40,12 @@ public class CalendarActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
-        // Get the current month and year
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MONTH, currentMonth-1);
-        calendar.set(Calendar.YEAR, currentYear);
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
-        String dateString = sdf.format(calendar.getTime());
+        final String[] months = getResources().getStringArray(R.array.months);
+        String currentDate = String.format("%s %d", months[currentMonth-1], currentYear);
 
         // Set the menu title
         MenuItem menuItem = menu.findItem(R.id.menu_date);
-        menuItem.setTitle(dateString);
+        menuItem.setTitle(currentDate);
 
         return true;
     }
@@ -93,8 +88,8 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(this, daySummaries);
-        RecyclerView calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
-        calendarRecyclerView.setAdapter(calendarAdapter);
+        RecyclerView rvCalendar = findViewById(R.id.rvCalendar);
+        rvCalendar.setAdapter(calendarAdapter);
     }
 
     @Override
