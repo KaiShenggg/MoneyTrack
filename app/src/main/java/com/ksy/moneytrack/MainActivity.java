@@ -16,8 +16,10 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -116,9 +118,27 @@ public class MainActivity extends AppCompatActivity {
             rvTransaction.setAdapter(null);
             tvNoTransaction.setVisibility(View.VISIBLE);
         } else {
+            List<DaySummary> daySummaries = new ArrayList<>();
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.MONTH, month-1);
+            calendar.set(Calendar.YEAR, year);
+            int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+            Map<String, Map<Integer, Double>> incomeAndExpenses = mySQLiteAdapter.queueIncomeAndExpenses(month, year);
+            Map<Integer, Double> incomePerDay = incomeAndExpenses.get("Income");
+            Map<Integer, Double> expensesPerDay = incomeAndExpenses.get("Expenses");
+
+            for (int i = daysInMonth; i >= 1; i--) {
+                double income = incomePerDay.getOrDefault(i, 0.0);
+                double expenses = expensesPerDay.getOrDefault(i, 0.0);
+
+                if (income != 0 || expenses != 0)
+                    daySummaries.add(new DaySummary(i, income, expenses));
+            }
+
             tvNoTransaction.setVisibility(View.GONE);
 
-            DataRecyclerViewAdapter adapter = new DataRecyclerViewAdapter(MainActivity.this, transactionList); // Pass the data to the adapter
+            DataRecyclerViewAdapter adapter = new DataRecyclerViewAdapter(MainActivity.this, transactionList, daySummaries); // Pass the data to the adapter
             rvTransaction.setAdapter(adapter);
 
             adapter.notifyDataSetChanged(); // Notify the adapter of the data changes
