@@ -24,10 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class TransactionBreakdownActivity extends AppCompatActivity {
+public class TransactionBreakdownActivity extends AppCompatActivity implements ItemListAdapter.OnAmountChangeListener {
 
     private String type;
     private int currentMonth, currentYear;
+    private TextView tvTotalAmountSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class TransactionBreakdownActivity extends AppCompatActivity {
         currentMonth = intent.getIntExtra("month", 1);
         currentYear = intent.getIntExtra("year", 2000);
 
+        tvTotalAmountSelected = findViewById(R.id.tvTotalAmountSelected);
 
         showBreakdown();
     }
@@ -223,12 +225,21 @@ public class TransactionBreakdownActivity extends AppCompatActivity {
             tvNoData.setVisibility(View.GONE);
 
             rvCategories.setLayoutManager(new LinearLayoutManager(this));
-            ItemListAdapter adapter = new ItemListAdapter(TransactionBreakdownActivity.this, sortedCategories, false); // Pass the data to the adapter
+            ItemListAdapter adapter = new ItemListAdapter(TransactionBreakdownActivity.this, sortedCategories, false, this); // Pass the data to the adapter
             rvCategories.setAdapter(adapter);
         } else {
             rvCategories.setAdapter(null);
             tvNoData.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onAmountChanged(double totalAmount) {
+        if (totalAmount != 0) {
+            tvTotalAmountSelected.setVisibility(View.VISIBLE);
+            tvTotalAmountSelected.setText("Total Amount Selected: " + MainActivity.decimalFormat.format(Math.abs(totalAmount)));
+        } else
+            tvTotalAmountSelected.setVisibility(View.GONE);
     }
 
     @Override
