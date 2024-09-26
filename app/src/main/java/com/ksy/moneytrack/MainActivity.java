@@ -161,13 +161,11 @@ public class MainActivity extends AppCompatActivity {
             if (!type.equals("Balance")) {
                 intent = new Intent(MainActivity.this, TransactionBreakdownActivity.class);
                 intent.putExtra("type", type);
-                intent.putExtra("month", currentMonth);
-                intent.putExtra("year", currentYear);
             } else {
                 intent = new Intent(MainActivity.this, CalendarActivity.class);
-                intent.putExtra("month", currentMonth);
-                intent.putExtra("year", currentYear);
             }
+            intent.putExtra("month", currentMonth);
+            intent.putExtra("year", currentYear);
             startActivity(intent);
         });
     }

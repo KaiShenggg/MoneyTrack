@@ -51,7 +51,7 @@ public class DataRecyclerViewAdapter extends RecyclerView.Adapter<DataRecyclerVi
         if (daySummary.getIncome() > 0)
             holder.tvIncome.setText("Income: " + String.format("%.2f", daySummary.getIncome()));
         if (daySummary.getExpenses() != 0)
-            holder.tvExpenses.setText("Expense: " + String.format("%.2f", Math.abs(daySummary.getExpenses())));
+            holder.tvExpenses.setText("Expenses: " + String.format("%.2f", Math.abs(daySummary.getExpenses())));
 
         // Populate the RecyclerView within the CardView with the transactions
         ItemListAdapter adapter = new ItemListAdapter(context, transactionsForDate, true);

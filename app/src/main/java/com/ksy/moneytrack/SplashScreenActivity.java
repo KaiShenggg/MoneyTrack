@@ -8,7 +8,7 @@ import android.os.Handler;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private static final long SPLASH_DELAY = 2000;
+    private static final long SPLASH_DELAY = 500;
     private Intent intent;
 
     @Override
