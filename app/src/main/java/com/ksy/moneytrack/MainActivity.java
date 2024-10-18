@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 double expenses = expensesPerDay.getOrDefault(i, 0.0);
 
                 if (income != 0 || expenses != 0)
-                    daySummaries.add(new DaySummary(i, income, expenses));
+                    daySummaries.add(new DaySummary(String.valueOf(i), income, expenses));
             }
 
             tvNoTransaction.setVisibility(View.GONE);

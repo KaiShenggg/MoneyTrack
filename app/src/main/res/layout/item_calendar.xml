@@ -9,9 +9,10 @@
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/black"
-        android:layout_marginBottom="15dp" />
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp" />
 
     <TextView
         android:id="@+id/tvIncome"
@@ -26,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="30dp"
         android:textSize="10sp"
         android:textColor="@color/coral_red" />
 

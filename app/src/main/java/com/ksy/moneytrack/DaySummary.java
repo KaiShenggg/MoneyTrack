@@ -1,17 +1,17 @@
 package com.ksy.moneytrack;
 
 public class DaySummary {
-    private int dayOfMonth;
-    private double income;
-    private double expenses;
+    private final String dayOfMonth;
+    private final double income;
+    private final double expenses;
 
-    public DaySummary(int dayOfMonth, double income, double expenses) {
+    public DaySummary(String dayOfMonth, double income, double expenses) {
         this.dayOfMonth = dayOfMonth;
         this.income = income;
         this.expenses = expenses;
     }
 
-    public int getDayOfMonth() {
+    public String getDayOfMonth() {
         return dayOfMonth;
     }
 

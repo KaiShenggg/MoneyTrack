@@ -73,6 +73,15 @@ public class CalendarActivity extends AppCompatActivity {
         calendar.set(Calendar.YEAR, currentYear);
         int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
+        // Find out which day of the week the 1st falls on
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        int firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK); // Sunday is 1, Monday is 2
+        firstDayOfWeek = firstDayOfWeek != 1 ? firstDayOfWeek : 7; // Sunday is the last day in my calendar
+
+        // Add empty days for days of the week before the 1st
+        for (int i = 1; i < firstDayOfWeek; i++)
+            daySummaries.add(new DaySummary("", 0, 0));
+
         SQLiteAdapter mySQLiteAdapter = new SQLiteAdapter(this);
         mySQLiteAdapter.openToRead();
 
@@ -84,7 +93,7 @@ public class CalendarActivity extends AppCompatActivity {
             double income = incomePerDay.getOrDefault(i, 0.0);
             double expenses = expensesPerDay.getOrDefault(i, 0.0);
 
-            daySummaries.add(new DaySummary(i, income, expenses));
+            daySummaries.add(new DaySummary(String.valueOf(i), income, expenses));
         }
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(this, daySummaries);

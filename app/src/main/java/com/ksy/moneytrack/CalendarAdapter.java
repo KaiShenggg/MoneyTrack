@@ -30,14 +30,15 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
         DaySummary daySummary = daySummaries.get(position);
 
-        // Set date text
-        holder.tvDate.setText(String.valueOf(daySummary.getDayOfMonth()));
+        if (!daySummary.getDayOfMonth().isEmpty()) {
+            holder.tvDate.setText(daySummary.getDayOfMonth());
 
-        // Set income and expenses
-        if (daySummary.getIncome() > 0)
-            holder.tvIncome.setText(String.format("%.2f", daySummary.getIncome()));
-        if (daySummary.getExpenses() != 0)
-            holder.tvExpenses.setText(String.format("%.2f", daySummary.getExpenses()));
+            // Set income and expenses
+            if (daySummary.getIncome() > 0)
+                holder.tvIncome.setText(String.format("%.2f", daySummary.getIncome()));
+            if (daySummary.getExpenses() != 0)
+                holder.tvExpenses.setText(String.format("%.2f", daySummary.getExpenses()));
+        }
     }
 
     @Override

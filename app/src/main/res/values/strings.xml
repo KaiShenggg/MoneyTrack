@@ -18,6 +18,13 @@
     <string name="tx_income_list">Income List</string>
     <string name="tx_expenses_list">Expenses List</string>
     <string name="tx_no_data_available">No Data Available</string>
+    <string name="tx_mon">Mon</string>
+    <string name="tx_tue">Tue</string>
+    <string name="tx_wed">Wed</string>
+    <string name="tx_thu">Thu</string>
+    <string name="tx_fri">Fri</string>
+    <string name="tx_sat">Sat</string>
+    <string name="tx_sun">Sun</string>
 
     <string-array name="months">
         <item>Jan</item>
