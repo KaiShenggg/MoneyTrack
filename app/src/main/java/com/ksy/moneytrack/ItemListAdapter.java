@@ -23,7 +23,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Transa
     private final Context context;
     private final List<?> items;
     private final boolean isTransaction;
-    private Set<Integer> selectedPositions = new HashSet<>();
+    private final Set<Integer> selectedPositions = new HashSet<>();
     private OnAmountChangeListener amountChangeListener;
 
     public ItemListAdapter(Context context, List<?> items, boolean isTransaction) {

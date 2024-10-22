@@ -16,7 +16,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -85,18 +84,15 @@ public class TransactionAddActivity extends AppCompatActivity {
         // To hide the keyboard after user enters the amount
         editAmount = findViewById(R.id.editAmount);
 
-        editAmount.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                // Check if the "Done" or "Enter" key was pressed
-                if (actionId == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    // Hide the keyboard
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    return true;
-                }
-                return false;
+        editAmount.setOnEditorActionListener((v, actionId, event) -> {
+            // Check if the "Done" or "Enter" key was pressed
+            if (actionId == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return true;
             }
+            return false;
         });
 
 
@@ -114,30 +110,24 @@ public class TransactionAddActivity extends AppCompatActivity {
         tvSelectedDate.setText(dateString);
 
         // To add a listener for pick date
-        cvPickDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int year = selectedYear;
-                int month = selectedMonth;
-                int day = selectedDay;
+        cvPickDate.setOnClickListener(v -> {
+            int year = selectedYear;
+            int month = selectedMonth;
+            int day = selectedDay;
 
-                // Create a variable for date picker dialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(TransactionAddActivity.this, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        String dateString = sdf.format(calendar.getTime());
-                        tvSelectedDate.setText(dateString);
+            // Create a variable for date picker dialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(TransactionAddActivity.this, R.style.DialogTheme, (view, year1, monthOfYear, dayOfMonth) -> {
+                calendar.set(year1, monthOfYear, dayOfMonth);
+                String dateString1 = sdf.format(calendar.getTime());
+                tvSelectedDate.setText(dateString1);
 
-                        selectedYear = year;
-                        selectedMonth = monthOfYear;
-                        selectedDay = dayOfMonth;
-                    }
-                },
-                        // Pass year, month and day for selected date in date picker
-                        year, month, day);
-                datePickerDialog.show();
-            }
+                selectedYear = year1;
+                selectedMonth = monthOfYear;
+                selectedDay = dayOfMonth;
+            },
+                    // Pass year, month and day for selected date in date picker
+                    year, month, day);
+            datePickerDialog.show();
         });
     }
 

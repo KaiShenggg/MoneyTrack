@@ -76,7 +76,7 @@ public class CalendarActivity extends AppCompatActivity {
         // Find out which day of the week the 1st falls on
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         int firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK); // Sunday is 1, Monday is 2
-        firstDayOfWeek = firstDayOfWeek != 1 ? firstDayOfWeek : 7; // Sunday is the last day in my calendar
+        firstDayOfWeek = firstDayOfWeek != 1 ? firstDayOfWeek-1 : 7; // Sunday is the last day in my calendar
 
         // Add empty days for days of the week before the 1st
         for (int i = 1; i < firstDayOfWeek; i++)

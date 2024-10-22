@@ -2,10 +2,10 @@ package com.ksy.moneytrack;
 
 public class Category {
 
-    private String title;
-    private int iconResId;
-    private int bgResId;
-    private String type;
+    private final String title;
+    private final int iconResId;
+    private final int bgResId;
+    private final String type;
 
     public Category(String title, int iconResId, int bgResId, String type) {
         this.title = title;

@@ -2,13 +2,13 @@ package com.ksy.moneytrack;
 
 public class Transaction {
 
-    private int id;
-    private String type;
-    private String category;
-    private double amount;
-    private String memo;
-    private String date;
-    private String created_at;
+    private final int id;
+    private final String type;
+    private final String category;
+    private final double amount;
+    private final String memo;
+    private final String date;
+    private final String created_at;
 
     public Transaction(int id, String type, String category, double amount, String memo, String date, String created_at) {
         this.id = id;

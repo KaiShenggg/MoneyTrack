@@ -18,8 +18,8 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
-    private List<Category> categories;
-    private Context context;
+    private final List<Category> categories;
+    private final Context context;
     private int selectedPosition = -1;
 
     public CategoryAdapter(Context context, List<Category> categories) {
@@ -48,8 +48,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         }
 
         holder.itemView.setOnClickListener(v -> {
+            // Update the background of the previous and current selected positions
+            notifyItemChanged(selectedPosition);
+            notifyItemChanged(position);
+
             selectedPosition = position;
-            notifyDataSetChanged(); // Refresh the RecyclerView to apply the selection
 
             // Automatically focus on editAmount
             EditText editAmount = ((Activity) v.getContext()).findViewById(R.id.editAmount);

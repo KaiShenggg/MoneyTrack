@@ -22,14 +22,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
         // Use a Handler to post a delayed Runnable to transition to the main activity
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+        new Handler().postDelayed(() -> {
+            intent = new Intent(SplashScreenActivity.this, MainActivity.class);
 
-                startActivity(intent);
-                finish();
-            }
+            startActivity(intent);
+            finish();
         }, SPLASH_DELAY);
     }
 }

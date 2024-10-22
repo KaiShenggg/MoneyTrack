@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Categories {
-    private static List<Category> categoryList = new ArrayList<>();
+    private static final List<Category> categoryList = new ArrayList<>();
 
     static {
         // Food
