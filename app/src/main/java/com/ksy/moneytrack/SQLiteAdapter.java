@@ -24,22 +24,22 @@ public class SQLiteAdapter {
 
     private static final String DATABASE_TRANSACTION_TABLE = "TRANSCATION";
     private static final String TRANSACTION_ID = "id";
-    private static final String TRANSACTION_KEY_CONTENT = "type";
-    private static final String TRANSACTION_KEY_CONTENT_2 = "category";
-    private static final String TRANSACTION_KEY_CONTENT_3 = "amount";
-    private static final String TRANSACTION_KEY_CONTENT_4 = "memo";
-    private static final String TRANSACTION_KEY_CONTENT_5 = "date";
-    private static final String TRANSACTION_KEY_CONTENT_6 = "created_at";
+    private static final String TRANSACTION_TYPE = "type";
+    private static final String TRANSACTION_CATEGORY = "category";
+    private static final String TRANSACTION_AMOUNT = "amount";
+    private static final String TRANSACTION_MEMO = "memo";
+    private static final String TRANSACTION_DATE = "date";
+    private static final String TRANSACTION_CREATED_AT = "created_at";
 
     // SQL command to create the table with the columns
     private static final String SCRIPT_CREATE_DATABASE_TRANSACTION_TABLE = "create table " + DATABASE_TRANSACTION_TABLE +
             " (" + TRANSACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            TRANSACTION_KEY_CONTENT + " text not null, " +
-            TRANSACTION_KEY_CONTENT_2 + " text not null, " +
-            TRANSACTION_KEY_CONTENT_3 + " decimal(10,2) not null, " +
-            TRANSACTION_KEY_CONTENT_4 + " text, " +
-            TRANSACTION_KEY_CONTENT_5 + " text not null, " +
-            TRANSACTION_KEY_CONTENT_6 + " text default (datetime('now','localtime')));";
+            TRANSACTION_TYPE + " text not null, " +
+            TRANSACTION_CATEGORY + " text not null, " +
+            TRANSACTION_AMOUNT + " decimal(10,2) not null, " +
+            TRANSACTION_MEMO + " text, " +
+            TRANSACTION_DATE + " text not null, " +
+            TRANSACTION_CREATED_AT + " text default (datetime('now','localtime')));";
 
     // Variables
     private final Context context;
@@ -72,16 +72,16 @@ public class SQLiteAdapter {
         return this;
     }
 
-    public long insertTransaction(String content, String content_2, double content_3, String content_4, String content_5) {
+    public long insertTransaction(String type, String category, double amount, String memo, String date) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TRANSACTION_KEY_CONTENT, content);
-        contentValues.put(TRANSACTION_KEY_CONTENT_2, content_2);
-        contentValues.put(TRANSACTION_KEY_CONTENT_3, content.equals("Income") ? content_3 : content_3 * -1);
-        contentValues.put(TRANSACTION_KEY_CONTENT_4, content_4);
+        contentValues.put(TRANSACTION_TYPE, type);
+        contentValues.put(TRANSACTION_CATEGORY, category);
+        contentValues.put(TRANSACTION_AMOUNT, type.equals("Income") ? amount : amount * -1);
+        contentValues.put(TRANSACTION_MEMO, memo);
 
         // Convert date to SQL DATE format
-        String sqlDate = formatDate(content_5);
-        contentValues.put(TRANSACTION_KEY_CONTENT_5, sqlDate);
+        String sqlDate = formatDate(date);
+        contentValues.put(TRANSACTION_DATE, sqlDate);
 
         return sqLiteDatabase.insert(DATABASE_TRANSACTION_TABLE, null, contentValues);
     }
@@ -102,10 +102,10 @@ public class SQLiteAdapter {
     public List<Transaction> queueAllTransaction(int month, int year, double[] totalAmounts) {
         String datePrefix = String.format("%d-%02d", year, month); // yyyy-mm format
 
-        String[] columns = new String[] {TRANSACTION_ID, TRANSACTION_KEY_CONTENT, TRANSACTION_KEY_CONTENT_2, TRANSACTION_KEY_CONTENT_3, TRANSACTION_KEY_CONTENT_4, TRANSACTION_KEY_CONTENT_5, TRANSACTION_KEY_CONTENT_6};
-        String selection = TRANSACTION_KEY_CONTENT_5 + " LIKE ?";
+        String[] columns = new String[] {TRANSACTION_ID, TRANSACTION_TYPE, TRANSACTION_CATEGORY, TRANSACTION_AMOUNT, TRANSACTION_MEMO, TRANSACTION_DATE, TRANSACTION_CREATED_AT};
+        String selection = TRANSACTION_DATE + " LIKE ?";
         String[] selectionArgs = new String[] { datePrefix + "%" };
-        String orderBy = TRANSACTION_KEY_CONTENT_5 + " DESC, " + TRANSACTION_KEY_CONTENT_6 + " DESC";
+        String orderBy = TRANSACTION_DATE + " DESC, " + TRANSACTION_CREATED_AT + " DESC";
         Cursor cursor = sqLiteDatabase.query(DATABASE_TRANSACTION_TABLE, columns, selection, selectionArgs, null, null,  orderBy);
 
         List<Transaction> result = new ArrayList<>();
@@ -113,22 +113,22 @@ public class SQLiteAdapter {
         double totalExpenses = 0;
 
         int index_id = cursor.getColumnIndex(TRANSACTION_ID);
-        int index_CONTENT = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT);
-        int index_CONTENT_2 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_2);
-        int index_CONTENT_3 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_3);
-        int index_CONTENT_4 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_4);
-        int index_CONTENT_5 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_5);
-        int index_CONTENT_6 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_6);
+        int index_type = cursor.getColumnIndex(TRANSACTION_TYPE);
+        int index_category = cursor.getColumnIndex(TRANSACTION_CATEGORY);
+        int index_amount = cursor.getColumnIndex(TRANSACTION_AMOUNT);
+        int index_memo = cursor.getColumnIndex(TRANSACTION_MEMO);
+        int index_date = cursor.getColumnIndex(TRANSACTION_DATE);
+        int index_created_at = cursor.getColumnIndex(TRANSACTION_CREATED_AT);
 
         for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
             Transaction transaction = new Transaction(
                     cursor.getInt(index_id),
-                    cursor.getString(index_CONTENT),
-                    cursor.getString(index_CONTENT_2),
-                    cursor.getDouble(index_CONTENT_3),
-                    cursor.getString(index_CONTENT_4),
-                    cursor.getString(index_CONTENT_5),
-                    cursor.getString(index_CONTENT_6)
+                    cursor.getString(index_type),
+                    cursor.getString(index_category),
+                    cursor.getDouble(index_amount),
+                    cursor.getString(index_memo),
+                    cursor.getString(index_date),
+                    cursor.getString(index_created_at)
             );
             result.add(transaction);
 
@@ -149,16 +149,16 @@ public class SQLiteAdapter {
     public Map<String, Float> queueTransactionByType(String type, int month, int year) {
         String datePrefix = String.format("%d-%02d", year, month); // yyyy-mm format
 
-        String[] columns = new String[] {TRANSACTION_KEY_CONTENT_2, "SUM(" + TRANSACTION_KEY_CONTENT_3 + ") as TotalAmount"};
-        String selection = TRANSACTION_KEY_CONTENT + " = ? AND " + TRANSACTION_KEY_CONTENT_5 + " LIKE ?";
+        String[] columns = new String[] {TRANSACTION_CATEGORY, "SUM(" + TRANSACTION_AMOUNT + ") as TotalAmount"};
+        String selection = TRANSACTION_TYPE + " = ? AND " + TRANSACTION_DATE + " LIKE ?";
         String[] selectionArgs = new String[] {type, datePrefix + "%"};
 
         // Perform aggregation query, grouping by category
-        Cursor cursor = sqLiteDatabase.query(DATABASE_TRANSACTION_TABLE, columns, selection, selectionArgs, TRANSACTION_KEY_CONTENT_2, null, null);
+        Cursor cursor = sqLiteDatabase.query(DATABASE_TRANSACTION_TABLE, columns, selection, selectionArgs, TRANSACTION_CATEGORY, null, null);
 
         Map<String, Float> categoryTotals = new HashMap<>();
         if (cursor != null) {
-            int indexCategory = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_2);
+            int indexCategory = cursor.getColumnIndex(TRANSACTION_CATEGORY);
             int indexTotalAmount = cursor.getColumnIndex("TotalAmount");
 
             while (cursor.moveToNext()) {
@@ -175,23 +175,23 @@ public class SQLiteAdapter {
     public Map<String, Map<Integer, Double>> queueIncomeAndExpenses(int month, int year) {
         String datePrefix = String.format("%d-%02d", year, month); // yyyy-mm format
 
-        String[] columns = new String[] {TRANSACTION_KEY_CONTENT, TRANSACTION_KEY_CONTENT_3, TRANSACTION_KEY_CONTENT_5};
-        String selection = TRANSACTION_KEY_CONTENT_5 + " LIKE ?";
+        String[] columns = new String[] {TRANSACTION_TYPE, TRANSACTION_AMOUNT, TRANSACTION_DATE};
+        String selection = TRANSACTION_DATE + " LIKE ?";
         String[] selectionArgs = new String[] { datePrefix + "%" };
-        String orderBy = TRANSACTION_KEY_CONTENT_5;
+        String orderBy = TRANSACTION_DATE;
         Cursor cursor = sqLiteDatabase.query(DATABASE_TRANSACTION_TABLE, columns, selection, selectionArgs, null, null,  orderBy);
 
         Map<Integer, Double> incomePerDay = new HashMap<>();
         Map<Integer, Double> expensesPerDay = new HashMap<>();
 
-        int index_CONTENT = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT);
-        int index_CONTENT_3 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_3);
-        int index_CONTENT_5 = cursor.getColumnIndex(TRANSACTION_KEY_CONTENT_5);
+        int index_type = cursor.getColumnIndex(TRANSACTION_TYPE);
+        int index_amount = cursor.getColumnIndex(TRANSACTION_AMOUNT);
+        int index_date = cursor.getColumnIndex(TRANSACTION_DATE);
 
         for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
-            String type = cursor.getString(index_CONTENT);
-            double amount = cursor.getDouble(index_CONTENT_3);
-            String date = cursor.getString(index_CONTENT_5);
+            String type = cursor.getString(index_type);
+            double amount = cursor.getDouble(index_amount);
+            String date = cursor.getString(index_date);
             String[] split = date.split("-");
             int day = Integer.parseInt(split[2]);
 
