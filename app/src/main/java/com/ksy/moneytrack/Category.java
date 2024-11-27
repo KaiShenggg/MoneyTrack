@@ -5,13 +5,11 @@ public class Category {
     private final String title;
     private final int iconResId;
     private final int bgResId;
-    private final String type;
 
-    public Category(String title, int iconResId, int bgResId, String type) {
+    public Category(String title, int iconResId, int bgResId) {
         this.title = title;
         this.iconResId = iconResId;
         this.bgResId = bgResId;
-        this.type = type;
     }
 
     public String getTitle() {
@@ -24,10 +22,6 @@ public class Category {
 
     public int getBgResId() {
         return bgResId;
-    }
-
-    public String getType() {
-        return type;
     }
 
 }

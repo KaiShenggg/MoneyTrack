@@ -24,6 +24,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Transa
     private final List<?> items;
     private final boolean isTransaction;
     private final Set<Integer> selectedPositions = new HashSet<>();
+    private String type;
     private OnAmountChangeListener amountChangeListener;
 
     public ItemListAdapter(Context context, List<?> items, boolean isTransaction) {
@@ -32,10 +33,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Transa
         this.isTransaction = isTransaction;
     }
 
-    public ItemListAdapter(Context context, List<?> items, boolean isTransaction, OnAmountChangeListener listener) {
+    public ItemListAdapter(Context context, List<?> items, boolean isTransaction, String type, OnAmountChangeListener listener) {
         this.context = context;
         this.items = items;
         this.isTransaction = isTransaction;
+        this.type = type;
         this.amountChangeListener = listener;
     }
 
@@ -52,7 +54,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Transa
         if (isTransaction) {
             Transaction transaction = (Transaction) items.get(position);
 
-            Category category = Categories.getCategoryByTitle(transaction.getCategory());
+            Category category = Categories.getCategory(transaction.getType(), transaction.getCategory());
 
             if (category != null) {
                 holder.ivCategoryBg.setImageResource(category.getBgResId());
@@ -79,7 +81,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Transa
         } else {
             Map.Entry<String, Float> entry = (Map.Entry<String, Float>) items.get(position);
 
-            Category category = Categories.getCategoryByTitle(entry.getKey());
+            Category category = Categories.getCategory(type, entry.getKey());
 
             if (category != null) {
                 holder.ivCategoryBg.setImageResource(category.getBgResId());
