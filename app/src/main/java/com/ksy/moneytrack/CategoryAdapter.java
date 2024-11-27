@@ -18,13 +18,23 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
-    private final List<Category> categories;
     private final Context context;
+    private final List<Category> categories;
     private int selectedPosition = -1;
 
-    public CategoryAdapter(Context context, List<Category> categories) {
+    public CategoryAdapter(Context context, List<Category> categories, String categoryTitle) {
         this.context = context;
         this.categories = categories;
+
+        // Find the position of selected category
+        if (categoryTitle != null) {
+            for (int i = 0; i < categories.size(); i++) {
+                if (categories.get(i).getTitle().equals(categoryTitle)) {
+                    selectedPosition = i;
+                    break;
+                }
+            }
+        }
     }
 
     @NonNull

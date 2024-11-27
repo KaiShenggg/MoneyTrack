@@ -86,6 +86,24 @@ public class SQLiteAdapter {
         return sqLiteDatabase.insert(DATABASE_TRANSACTION_TABLE, null, contentValues);
     }
 
+    public boolean updateTransaction(int id, String type, String category, double amount, String memo, String date) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TRANSACTION_TYPE, type);
+        contentValues.put(TRANSACTION_CATEGORY, category);
+        contentValues.put(TRANSACTION_AMOUNT, type.equals("Income") ? amount : amount * -1);
+        contentValues.put(TRANSACTION_MEMO, memo);
+
+        // Convert date to SQL DATE format
+        String sqlDate = formatDate(date);
+        contentValues.put(TRANSACTION_DATE, sqlDate);
+
+        String whereClause =  TRANSACTION_ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(id)};
+
+        int rowsUpdated = sqLiteDatabase.update(DATABASE_TRANSACTION_TABLE, contentValues, whereClause, whereArgs);
+        return rowsUpdated > 0;
+    }
+
     // Helper method to format date to SQL DATE format (YYYY-MM-DD)
     private String formatDate(String date) {
         try {

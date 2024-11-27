@@ -11,9 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class TransactionDetailActivity extends AppCompatActivity {
 
     private int id;
+
+    public static final int REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,20 @@ public class TransactionDetailActivity extends AppCompatActivity {
         tvAmount.setText(amount);
         tvMemo.setText(memo.isEmpty() ? "-" : memo);
         tvDate.setText(date);
+
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
+            Intent intentToEdit = new Intent(TransactionDetailActivity.this, TransactionAddActivity.class);
+            intentToEdit.putExtra("action", "edit");
+            intentToEdit.putExtra("id", id);
+            intentToEdit.putExtra("type", type);
+            intentToEdit.putExtra("categoryTitle", categoryTitle);
+            intentToEdit.putExtra("amount", amount);
+            intentToEdit.putExtra("memo", memo);
+            intentToEdit.putExtra("date", date);
+            startActivityForResult(intentToEdit, REQUEST_CODE);
+        });
     }
 
     @Override
@@ -78,8 +96,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
 
                 if (isDeleted) {
                     Toast.makeText(this, "Deleted successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent();
-                    setResult(RESULT_OK, intent);
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     Toast.makeText(this, "Failed to delete transaction", Toast.LENGTH_SHORT).show();
@@ -104,5 +121,17 @@ public class TransactionDetailActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    // To update transaction view when returning from other activities
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Return to MainActivity after successful update
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 }

@@ -5,6 +5,7 @@
     <string name="tx_balance">Balance</string>
     <string name="tx_no_transaction">No Transactions\nAdd it now</string>
     <string name="tx_new_transaction">New Transaction</string>
+    <string name="tx_edit">Edit</string>
     <string name="tx_category">Category</string>
     <string name="tx_type">Type</string>
     <string name="tx_amount">Amount</string>
@@ -41,7 +42,7 @@
         <item>Dec</item>
     </string-array>
 
-    <string-array name="new_transaction">
+    <string-array name="types">
         <item>Expenses</item>
         <item>Income</item>
     </string-array>

@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, TransactionAddActivity.class);
+            intent.putExtra("action", "add");
             startActivityForResult(intent, REQUEST_CODE);
         });
     }
