@@ -73,6 +73,7 @@ public class TransactionBreakdownActivity extends AppCompatActivity implements I
                     currentMonth = selectedMonth;
                     currentYear = selectedYear;
                     showBreakdown();
+                    onAmountChanged(0);
                 }
             });
 
@@ -238,8 +239,9 @@ public class TransactionBreakdownActivity extends AppCompatActivity implements I
         if (totalAmount != 0) {
             tvTotalAmountSelected.setVisibility(View.VISIBLE);
             tvTotalAmountSelected.setText("Total Amount Selected: " + MainActivity.decimalFormat.format(Math.abs(totalAmount)));
-        } else
+        } else {
             tvTotalAmountSelected.setVisibility(View.GONE);
+        }
     }
 
     @Override
