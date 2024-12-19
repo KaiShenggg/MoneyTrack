@@ -2,6 +2,7 @@ package com.ksy.moneytrack;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,58 @@ import java.util.List;
 import java.util.Map;
 
 public class Utils {
+
+    private static void bringForwardBalance(Context context, String previousYearMonth, String currentYearMonth) {
+        SQLiteAdapter mySQLiteAdapter = new SQLiteAdapter(context);
+        mySQLiteAdapter.openToWrite();
+
+        // Calculate the balance from the previous month
+        double totalIncome = mySQLiteAdapter.getTotalByType(previousYearMonth, "Income");
+        double totalExpenses = mySQLiteAdapter.getTotalByType(previousYearMonth, "Expenses");
+        double balance = totalIncome + totalExpenses;
+
+        // Insert balance if it is greater than 0
+        if (balance > 0) {
+            mySQLiteAdapter.insertTransaction("Income", "Balance", balance, "", currentYearMonth+"-01");
+        }
+
+        mySQLiteAdapter.close();
+    }
+
+    public static void checkAndBringForwardBalance(Context context) {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        String currentYearMonth = String.format("%d-%02d", currentYear, currentMonth);
+
+        // Retrieve the last processed year month from SharedPreferences
+        SharedPreferences preferences = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        String lastProcessedYearMonth = preferences.getString("lastProcessedYearMonth", "");
+
+        // First-time case: Initialize SharedPreferences and skip processing
+        if (lastProcessedYearMonth.isEmpty()) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("lastProcessedYearMonth", currentYearMonth);
+            editor.apply();
+            return;
+        }
+
+        // Proceed only if this month hasn't been processed
+        if (!currentYearMonth.equals(lastProcessedYearMonth)) {
+            // Calculate the previous month
+            calendar.add(Calendar.MONTH, -1); // Move calendar to the previous month
+            int previousYear = calendar.get(Calendar.YEAR);
+            int previousMonth = calendar.get(Calendar.MONTH) + 1;
+            String previousYearMonth = String.format("%d-%02d", previousYear, previousMonth);
+
+            bringForwardBalance(context, previousYearMonth, currentYearMonth);
+
+            // Update the last processed year month in SharedPreferences
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("lastProcessedYearMonth", currentYearMonth);
+            editor.apply();
+        }
+    }
 
     public static Map<String, List<Transaction>> groupTransactionsByDate(List<Transaction> transactions) {
         Map<String, List<Transaction>> groupedTransactions = new LinkedHashMap<>();

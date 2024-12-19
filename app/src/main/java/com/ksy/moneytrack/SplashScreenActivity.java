@@ -29,4 +29,10 @@ public class SplashScreenActivity extends AppCompatActivity {
             finish();
         }, SPLASH_DELAY);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Utils.checkAndBringForwardBalance(this);
+    }
 }

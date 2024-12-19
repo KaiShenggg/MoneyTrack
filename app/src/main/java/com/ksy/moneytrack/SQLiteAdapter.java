@@ -228,6 +228,25 @@ public class SQLiteAdapter {
         return result;
     }
 
+    public double getTotalByType(String yearMonth, String type) {
+        double total = 0;
+        String sumAmount = "SUM(amount)";
+
+        String[] columns = new String[] {sumAmount};
+        String selection = TRANSACTION_TYPE + " = ? AND " + TRANSACTION_DATE + " LIKE ?";
+        String[] selectionArgs = new String[] {type, yearMonth + "%"};
+        Cursor cursor = sqLiteDatabase.query(DATABASE_TRANSACTION_TABLE, columns, selection, selectionArgs, null, null, null);
+
+        int index_sum_amount = cursor.getColumnIndex(sumAmount);
+
+        if (cursor.moveToFirst()) { // Check if the query returned a result
+            total = cursor.getDouble(index_sum_amount);
+        }
+
+        cursor.close();
+        return total;
+    }
+
     public boolean deleteTransaction(int id) {
         String whereClause =  TRANSACTION_ID + " = ?";
         String[] whereArgs = new String[] {String.valueOf(id)};
