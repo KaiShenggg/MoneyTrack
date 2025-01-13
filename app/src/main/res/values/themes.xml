@@ -1,15 +1,37 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.EzSplit" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Primary brand color. -->
+    <!-- Base application theme -->
+    <style name="Theme.MoneyTrack.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Primary brand color -->
         <item name="colorPrimary">@color/yellow</item>
         <item name="colorPrimaryDark">@color/yellow</item>
         <item name="colorAccent">@color/yellow</item>
         <item name="titleTextColor">@color/white</item>
-        <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.MoneyTrack.ActionBar" parent="Theme.MoneyTrack.Base">
+        <!-- Keep the default ActionBar -->
+    </style>
+
+    <style name="Theme.MoneyTrack.NoActionBar" parent="Theme.MoneyTrack.Base">
+        <!-- Disable the ActionBar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <!-- Dialog theme -->
     <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/yellow</item>
+    </style>
+
+
+    <!-- Modal Bottom Sheet theme -->
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/ModalStyle</item>
+        <item name="colorAccent">@color/yellow</item>
+    </style>
+
+    <style name="ModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_dialog</item>
     </style>
 </resources>

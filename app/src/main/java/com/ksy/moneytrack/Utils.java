@@ -3,6 +3,8 @@ package com.ksy.moneytrack;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 public class Utils {
+
+    private static final String APP_PREFS = "AppPrefs";
+    private static final String IS_BRING_FORWARD_BALANCE = "isBringForwardBalance";
+    private static final String LAST_PROCESSED_YEAR_MONTH = "lastProcessedYearMonth";
 
     private static void bringForwardBalance(Context context, String previousYearMonth, String currentYearMonth) {
         SQLiteAdapter mySQLiteAdapter = new SQLiteAdapter(context);
@@ -41,19 +47,22 @@ public class Utils {
         String currentYearMonth = String.format("%d-%02d", currentYear, currentMonth);
 
         // Retrieve the last processed year month from SharedPreferences
-        SharedPreferences preferences = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
-        String lastProcessedYearMonth = preferences.getString("lastProcessedYearMonth", "");
+        SharedPreferences preferences = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE);
+        String isBringForwardBalance = preferences.getString(IS_BRING_FORWARD_BALANCE, "");
 
         // First-time case: Initialize SharedPreferences and skip processing
-        if (lastProcessedYearMonth.isEmpty()) {
+        if (isBringForwardBalance.isEmpty()) {
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("lastProcessedYearMonth", currentYearMonth);
+            editor.putString(IS_BRING_FORWARD_BALANCE, "true");
+            editor.putString(LAST_PROCESSED_YEAR_MONTH, currentYearMonth);
             editor.apply();
             return;
         }
 
-        // Proceed only if this month hasn't been processed
-        if (!currentYearMonth.equals(lastProcessedYearMonth)) {
+        String lastProcessedYearMonth = preferences.getString(LAST_PROCESSED_YEAR_MONTH, "");
+
+        // Proceed only if isBringForwardBalance is true and this month hasn't been processed
+        if (isBringForwardBalance.equals("true") && !currentYearMonth.equals(lastProcessedYearMonth)) {
             // Calculate the previous month
             calendar.add(Calendar.MONTH, -1); // Move calendar to the previous month
             int previousYear = calendar.get(Calendar.YEAR);
@@ -64,9 +73,26 @@ public class Utils {
 
             // Update the last processed year month in SharedPreferences
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("lastProcessedYearMonth", currentYearMonth);
+            editor.putString(LAST_PROCESSED_YEAR_MONTH, currentYearMonth);
             editor.apply();
         }
+    }
+
+    public static void updateBringForwardBalance(Context context, boolean isBringForwardBalance) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(IS_BRING_FORWARD_BALANCE, isBringForwardBalance ? "true" : "false");
+
+        if (isBringForwardBalance) {
+            Calendar calendar = Calendar.getInstance();
+            int currentYear = calendar.get(Calendar.YEAR);
+            int currentMonth = calendar.get(Calendar.MONTH) + 1;
+            String currentYearMonth = String.format("%d-%02d", currentYear, currentMonth);
+
+            editor.putString(LAST_PROCESSED_YEAR_MONTH, currentYearMonth);
+        }
+
+        editor.apply();
     }
 
     public static Map<String, List<Transaction>> groupTransactionsByDate(List<Transaction> transactions) {
@@ -144,6 +170,16 @@ public class Utils {
     // To handle user actions
     public interface MonthYearPickerCallback {
         void onMonthYearSelected(Integer month, Integer year);
+    }
+
+    public static String getAppVersion(Context context) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            return "Unknown";
+        }
     }
 
 }
