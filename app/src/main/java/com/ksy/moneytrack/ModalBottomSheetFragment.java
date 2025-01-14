@@ -31,6 +31,7 @@ public class ModalBottomSheetFragment extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         SwitchCompat bringForwardBalanceSwitch = view.findViewById(R.id.switchBringForwardBalance);
+        bringForwardBalanceSwitch.setChecked(Utils.getIsBringForwardBalance(requireContext()));
         bringForwardBalanceSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
                 Utils.updateBringForwardBalance(requireContext(), isChecked)
         );
@@ -38,8 +39,8 @@ public class ModalBottomSheetFragment extends BottomSheetDialogFragment {
 
         String appVersion = Utils.getAppVersion(requireContext());
 
-        TextView versionTextView = view.findViewById(R.id.tvVersion);
-        versionTextView.setText(getString(R.string.tx_app_version, appVersion));
+        TextView tvVersion = view.findViewById(R.id.tvVersion);
+        tvVersion.setText(getString(R.string.tx_app_version, appVersion));
     }
 
 }

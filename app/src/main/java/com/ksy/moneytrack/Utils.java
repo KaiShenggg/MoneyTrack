@@ -46,23 +46,21 @@ public class Utils {
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
         String currentYearMonth = String.format("%d-%02d", currentYear, currentMonth);
 
-        // Retrieve the last processed year month from SharedPreferences
         SharedPreferences preferences = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE);
-        String isBringForwardBalance = preferences.getString(IS_BRING_FORWARD_BALANCE, "");
+        boolean isBringForwardBalance = preferences.getBoolean(IS_BRING_FORWARD_BALANCE, false);
+        String lastProcessedYearMonth = preferences.getString(LAST_PROCESSED_YEAR_MONTH, "");
 
         // First-time case: Initialize SharedPreferences and skip processing
-        if (isBringForwardBalance.isEmpty()) {
+        if (lastProcessedYearMonth.isEmpty()) {
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(IS_BRING_FORWARD_BALANCE, "true");
+            editor.putBoolean(IS_BRING_FORWARD_BALANCE, true);
             editor.putString(LAST_PROCESSED_YEAR_MONTH, currentYearMonth);
             editor.apply();
             return;
         }
 
-        String lastProcessedYearMonth = preferences.getString(LAST_PROCESSED_YEAR_MONTH, "");
-
         // Proceed only if isBringForwardBalance is true and this month hasn't been processed
-        if (isBringForwardBalance.equals("true") && !currentYearMonth.equals(lastProcessedYearMonth)) {
+        if (isBringForwardBalance && !currentYearMonth.equals(lastProcessedYearMonth)) {
             // Calculate the previous month
             calendar.add(Calendar.MONTH, -1); // Move calendar to the previous month
             int previousYear = calendar.get(Calendar.YEAR);
@@ -78,10 +76,15 @@ public class Utils {
         }
     }
 
+    public static boolean getIsBringForwardBalance(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE);
+        return preferences.getBoolean(IS_BRING_FORWARD_BALANCE, false);
+    }
+
     public static void updateBringForwardBalance(Context context, boolean isBringForwardBalance) {
         SharedPreferences preferences = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(IS_BRING_FORWARD_BALANCE, isBringForwardBalance ? "true" : "false");
+        editor.putBoolean(IS_BRING_FORWARD_BALANCE, isBringForwardBalance);
 
         if (isBringForwardBalance) {
             Calendar calendar = Calendar.getInstance();
