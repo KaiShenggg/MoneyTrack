@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -100,6 +102,24 @@ public class TransactionAddActivity extends AppCompatActivity {
 
         listCategories(selectedType, categoryTitle);
 
+
+        // Limit user input to 2 decimal places
+        editAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String input = s.toString();
+
+                if (!input.matches("\\d*(\\.\\d{0,2})?")) {
+                    s.delete(input.length() - 1, input.length()); // Delete the last character entered
+                }
+            }
+        });
 
         // To hide the keyboard after user enters the amount
         editAmount.setOnEditorActionListener((v, actionId, event) -> {
