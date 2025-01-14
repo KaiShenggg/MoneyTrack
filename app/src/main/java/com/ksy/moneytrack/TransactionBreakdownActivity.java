@@ -226,7 +226,7 @@ public class TransactionBreakdownActivity extends AppCompatActivity implements I
             tvNoData.setVisibility(View.GONE);
 
             rvCategories.setLayoutManager(new LinearLayoutManager(this));
-            ItemListAdapter adapter = new ItemListAdapter(TransactionBreakdownActivity.this, sortedCategories, false, type, this);
+            ItemListAdapter adapter = new ItemListAdapter(sortedCategories, false, type, this);
             rvCategories.setAdapter(adapter);
         } else {
             rvCategories.setAdapter(null);

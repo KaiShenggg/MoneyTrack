@@ -54,7 +54,7 @@ public class DataRecyclerViewAdapter extends RecyclerView.Adapter<DataRecyclerVi
             holder.tvExpenses.setText("Expenses: " + String.format("%.2f", Math.abs(daySummary.getExpenses())));
 
         // Populate the RecyclerView within the CardView with the transactions
-        ItemListAdapter adapter = new ItemListAdapter(context, transactionsForDate, true);
+        ItemListAdapter adapter = new ItemListAdapter(transactionsForDate, true);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(context)); // Ensure the RecyclerView is properly initialized
         holder.recyclerView.setAdapter(adapter);
     }

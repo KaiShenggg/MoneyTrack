@@ -1,6 +1,5 @@
 package com.ksy.moneytrack;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,8 @@ import java.util.List;
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder> {
 
     private final List<DaySummary> daySummaries;
-    private final Context context;
 
-    public CalendarAdapter(Context context, List<DaySummary> daySummaries) {
-        this.context = context;
+    public CalendarAdapter(List<DaySummary> daySummaries) {
         this.daySummaries = daySummaries;
     }
 

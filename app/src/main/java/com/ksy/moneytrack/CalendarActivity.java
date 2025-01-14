@@ -96,7 +96,7 @@ public class CalendarActivity extends AppCompatActivity {
             daySummaries.add(new DaySummary(String.valueOf(i), income, expenses));
         }
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(this, daySummaries);
+        CalendarAdapter calendarAdapter = new CalendarAdapter(daySummaries);
         RecyclerView rvCalendar = findViewById(R.id.rvCalendar);
         rvCalendar.setAdapter(calendarAdapter);
     }

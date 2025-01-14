@@ -1,6 +1,5 @@
 package com.ksy.moneytrack;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -20,21 +19,18 @@ import java.util.Set;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.TransactionViewHolder> {
 
-    private final Context context;
     private final List<?> items;
     private final boolean isTransaction;
     private final Set<Integer> selectedPositions = new HashSet<>();
     private String type;
     private OnAmountChangeListener amountChangeListener;
 
-    public ItemListAdapter(Context context, List<?> items, boolean isTransaction) {
-        this.context = context;
+    public ItemListAdapter(List<?> items, boolean isTransaction) {
         this.items = items;
         this.isTransaction = isTransaction;
     }
 
-    public ItemListAdapter(Context context, List<?> items, boolean isTransaction, String type, OnAmountChangeListener listener) {
-        this.context = context;
+    public ItemListAdapter(List<?> items, boolean isTransaction, String type, OnAmountChangeListener listener) {
         this.items = items;
         this.isTransaction = isTransaction;
         this.type = type;
