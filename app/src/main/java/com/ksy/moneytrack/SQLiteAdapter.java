@@ -117,6 +117,38 @@ public class SQLiteAdapter {
         }
     }
 
+    public List<Transaction> queueAllTransaction() {
+        String[] columns = new String[] {TRANSACTION_ID, TRANSACTION_TYPE, TRANSACTION_CATEGORY, TRANSACTION_AMOUNT, TRANSACTION_MEMO, TRANSACTION_DATE, TRANSACTION_CREATED_AT};
+        String orderBy = TRANSACTION_DATE + " ASC, " + TRANSACTION_CREATED_AT + " ASC";
+        Cursor cursor = sqLiteDatabase.query(DATABASE_TRANSACTION_TABLE, columns, null, null, null, null,  orderBy);
+
+        List<Transaction> result = new ArrayList<>();
+
+        int index_id = cursor.getColumnIndex(TRANSACTION_ID);
+        int index_type = cursor.getColumnIndex(TRANSACTION_TYPE);
+        int index_category = cursor.getColumnIndex(TRANSACTION_CATEGORY);
+        int index_amount = cursor.getColumnIndex(TRANSACTION_AMOUNT);
+        int index_memo = cursor.getColumnIndex(TRANSACTION_MEMO);
+        int index_date = cursor.getColumnIndex(TRANSACTION_DATE);
+        int index_created_at = cursor.getColumnIndex(TRANSACTION_CREATED_AT);
+
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+            Transaction transaction = new Transaction(
+                    cursor.getInt(index_id),
+                    cursor.getString(index_type),
+                    cursor.getString(index_category),
+                    cursor.getDouble(index_amount),
+                    cursor.getString(index_memo),
+                    cursor.getString(index_date),
+                    cursor.getString(index_created_at)
+            );
+            result.add(transaction);
+        }
+
+        cursor.close();
+        return result;
+    }
+
     public List<Transaction> queueAllTransaction(int month, int year, double[] totalAmounts) {
         String datePrefix = String.format("%d-%02d", year, month); // yyyy-mm format
 
