@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
@@ -23,10 +25,31 @@ import java.util.List;
 
 public class ModalBottomSheetFragment extends BottomSheetDialogFragment {
 
+    private ActivityResultLauncher<String[]> importFileLauncher;
+    private OnImportListener importListener;
+
+    // Callback interface
+    public interface OnImportListener {
+        void onImportSuccess();
+    }
+
+    public void setOnImportListener(OnImportListener listener) {
+        this.importListener = listener;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
+
+        importFileLauncher = registerForActivityResult(
+                new ActivityResultContracts.OpenDocument(),
+                uri -> {
+                    if (uri != null) {
+                        importCSVFromUri(uri);
+                    }
+                }
+        );
     }
 
     @Override
@@ -48,6 +71,10 @@ public class ModalBottomSheetFragment extends BottomSheetDialogFragment {
 
         LinearLayout llExportCSV = view.findViewById(R.id.llExportCSV);
         llExportCSV.setOnClickListener(v -> exportCSV());
+
+
+        LinearLayout llImportCSV = view.findViewById(R.id.llImportCSV);
+        llImportCSV.setOnClickListener(v -> importCSV());
 
 
         String appVersion = Utils.getAppVersion(requireContext());
@@ -87,6 +114,48 @@ public class ModalBottomSheetFragment extends BottomSheetDialogFragment {
         startActivity(chooser);
 
         dismiss(); // Close BottomSheet
+    }
+
+    private void importCSV() {
+        // Launch the file selector to allow selection of CSV file
+        importFileLauncher.launch(new String[]{"text/csv", "text/comma-separated-values"});
+    }
+
+    private void importCSVFromUri(Uri uri) {
+        try {
+            List<Transaction> transactions = CsvUtil.parseCSV(requireContext(), uri);
+
+            if (transactions.isEmpty()) {
+                Toast.makeText(requireContext(), "CSV file is empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            saveTransactions(transactions);
+
+            // Data is returned via callback
+            if (importListener != null) {
+                importListener.onImportSuccess();
+            }
+
+            dismiss();
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Import failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void saveTransactions(List<Transaction> transactions) {
+        SQLiteAdapter mySQLiteAdapter = new SQLiteAdapter(requireContext());
+        mySQLiteAdapter.openToWrite();
+
+        int successCount = mySQLiteAdapter.insertTransactions(transactions);
+
+        if (transactions.size() == successCount) {
+            Toast.makeText(requireContext(), successCount + " records successfully imported", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "Import failed", Toast.LENGTH_SHORT).show();
+        }
+
+        mySQLiteAdapter.close();
     }
 
 }

@@ -7,13 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class SQLiteAdapter {
@@ -80,10 +76,41 @@ public class SQLiteAdapter {
         contentValues.put(TRANSACTION_MEMO, memo);
 
         // Convert date to SQL DATE format
-        String sqlDate = formatDate(date);
+        String sqlDate = DateUtil.formatUiDateToSql(date);
         contentValues.put(TRANSACTION_DATE, sqlDate);
 
         return sqLiteDatabase.insert(DATABASE_TRANSACTION_TABLE, null, contentValues);
+    }
+
+    public int insertTransactions(List<Transaction> transactions) {
+        int successCount = 0;
+        sqLiteDatabase.beginTransaction();
+
+        try {
+            for (Transaction t : transactions) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(TRANSACTION_TYPE, t.getType());
+                contentValues.put(TRANSACTION_CATEGORY, t.getCategory());
+                contentValues.put(TRANSACTION_AMOUNT, t.getAmount());
+                contentValues.put(TRANSACTION_MEMO, t.getMemo());
+                contentValues.put(TRANSACTION_DATE, t.getDate());
+
+                if (t.getCreatedAt() != null) {
+                    contentValues.put(TRANSACTION_CREATED_AT, t.getCreatedAt());
+                }
+
+                long result = sqLiteDatabase.insert(DATABASE_TRANSACTION_TABLE, null, contentValues);
+                if (result != -1) {
+                    successCount++;
+                }
+            }
+
+            sqLiteDatabase.setTransactionSuccessful(); // Successfully marked
+        } finally {
+            sqLiteDatabase.endTransaction();
+        }
+
+        return successCount;
     }
 
     public boolean updateTransaction(int id, String type, String category, double amount, String memo, String date) {
@@ -94,7 +121,7 @@ public class SQLiteAdapter {
         contentValues.put(TRANSACTION_MEMO, memo);
 
         // Convert date to SQL DATE format
-        String sqlDate = formatDate(date);
+        String sqlDate = DateUtil.formatUiDateToSql(date);
         contentValues.put(TRANSACTION_DATE, sqlDate);
 
         String whereClause =  TRANSACTION_ID + " = ?";
@@ -102,19 +129,6 @@ public class SQLiteAdapter {
 
         int rowsUpdated = sqLiteDatabase.update(DATABASE_TRANSACTION_TABLE, contentValues, whereClause, whereArgs);
         return rowsUpdated > 0;
-    }
-
-    // Helper method to format date to SQL DATE format (YYYY-MM-DD)
-    private String formatDate(String date) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-            SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            Date parsedDate = inputFormat.parse(date);
-            return sqlFormat.format(parsedDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return date; // Return original date string if parsing fails
-        }
     }
 
     public List<Transaction> queueAllTransaction() {

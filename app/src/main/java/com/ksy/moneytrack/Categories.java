@@ -71,4 +71,13 @@ public class Categories {
     public static List<Category> getCategoriesByType(String type) {
         return type.equals("Expenses") ? expensesCategoryList : incomeCategoryList;
     }
+
+    public static String getCategoryTitle(String type, String title) {
+        List<Category> categoryList = type.equals("Expenses") ? expensesCategoryList : incomeCategoryList;
+        return categoryList.stream()
+                .map(Category::getTitle)
+                .filter(categoryTitle -> categoryTitle.equalsIgnoreCase(title))
+                .findFirst()
+                .orElse(categoryList.get(categoryList.size() - 1).getTitle()); // Return "Others" if not found
+    }
 }

@@ -47,6 +47,12 @@ public class MainActivity extends AppCompatActivity {
         TextView toolbarTitle = findViewById(R.id.toolbarTitle);
         toolbarTitle.setOnClickListener(v -> {
             ModalBottomSheetFragment bottomSheetFragment = new ModalBottomSheetFragment();
+
+            bottomSheetFragment.setOnImportListener(() -> {
+                // Refresh UI
+                listTransactions(currentMonth, currentYear);
+            });
+
             bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
         });
 

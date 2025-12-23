@@ -28,6 +28,7 @@
     <string name="tx_sun">Sun</string>
     <string name="tx_auto_bring_forward_balance">Auto bring forward balance from last month</string>
     <string name="tx_export_as_csv">Export as CSV</string>
+    <string name="tx_import_from_csv">Import from CSV</string>
     <string name="tx_app_version">App Version: %s</string>
 
     <string-array name="months">
